@@ -8,7 +8,7 @@ gem 'sass-rails', '~> 5.0.3'
 gem 'uglifier', '>= 2.7.1'
 
 gem 'jquery-rails'
-
+gem "webmock"
 
 # for Heroku deployment - as described in Ap. A of ELLS book
 group :development, :test do
@@ -27,4 +27,10 @@ end
 group :production do
   gem 'pg', '~> 0.2'
   gem 'rails_12factor'
+end
+
+gem 'faraday'  # in main group; simplifies calling TMDb
+group :test do
+  gem 'rails-controller-testing'
+  gem 'guard-rspec'                 # automates re-running tests
 end

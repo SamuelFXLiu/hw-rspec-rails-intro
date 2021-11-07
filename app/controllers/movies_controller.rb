@@ -45,6 +45,26 @@ class MoviesController < ApplicationController
       flash[:notice] = "Movie '#{@movie.title}' deleted."
       redirect_to movies_path
     end
+  
+    def search_tmdb
+      if (params[:title] == '' && params[:language] != '')
+        flash[:alert] = "Please fill in all required fields!"
+      end
+      if (params[:language] != nil)
+        @movies = Movie.find_in_tmdb(params.slice(:title, :release_year, :language))
+        if (@movies != nil && @movies['total_results'] == 0)
+          flash[:alert] = "No movies found with given parameters!"
+        end
+        @movies = @movies['results']
+      end      
+    end
+  
+    def add_movie
+      m = Movie.create(title: params[:title], rating: params[:rating],
+      release_date: params[:release_date])
+      flash[:notice] = "#{m.title} was successfully added to RottenPotatoes."
+      redirect_to search_tmdb_path
+    end
     
     private
   
@@ -67,5 +87,6 @@ class MoviesController < ApplicationController
     def sort_by
       params[:sort_by] || session[:sort_by] || 'id'
     end
+    
   end
   
